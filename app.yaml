@@ -1,0 +1,15 @@
+runtime: php72
+
+instance_class: F4
+automatic_scaling:
+  max_instances: 1
+
+handlers:
+- url: .*
+  secure: always
+  script: auto
+
+env_variables:
+  GAE_DEVELOPMENT: 'true'
+
+entrypoint: bash entrypoint.sh

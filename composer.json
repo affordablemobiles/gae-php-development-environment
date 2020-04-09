@@ -1,0 +1,17 @@
+{
+    "name": "a1comms/gae-development-environment",
+    "description": "Development Environment for Google App Engine.",
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "chmod 755 reverse-ssh-endpoint"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}
