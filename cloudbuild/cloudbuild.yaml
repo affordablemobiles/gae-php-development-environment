@@ -1,9 +1,9 @@
 steps:
-  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "/bin/bash"
     args: ["./cloudbuild/get_container_image.sh"]
     id: IdentifyVersion
-  - name: "gcr.io/k8s-skaffold/pack"
+  - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "/bin/sh"
     args: ["./cloudbuild/build_container_image.sh"]
     env:
