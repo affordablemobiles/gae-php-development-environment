@@ -1,29 +1,17 @@
 #!/bin/bash
 
-echo "Starting SSH Development Endpoint..."
-/srv/reverse-ssh-endpoint -c /srv/endpoint-config.yaml;
+echo "Mounting NFS share..."
+mkdir /tmp/www
+sudo mount -o nolock 10.160.50.1:/var/www /tmp/www
+
+echo "Configuring logpipe..."
+mkfifo -m 600 /tmp/logpipe
+cat <> /tmp/logpipe 1>&2 &
+CPID=$!
 
 echo "Starting PHP runtime..."
-serve --enable-dynamic-workers public/index.php &
-WPID=$!;
+serve --enable-dynamic-workers --workers=50 public/index.php &
+SPID=$!
 
-echo "Sleeping while runtime starts..."
-sleep 1;
-
-echo "Copying template folder to development webroot..."
-cp -r /srv/template /tmp/srv;
-
-echo "Adjusting nginx configuration..."
-php regex-nginx.php;
-
-echo "Reloading nginx..."
-nginx -c /tmp/google-config/nginx.conf -t && nginx -c /tmp/google-config/nginx.conf -s reload;
-
-echo "Downloading rsync binary..."
-wget -O /tmp/rsync https://storage.googleapis.com/a1-alpha.appspot.com/rstatic/rsync;
-
-echo "Preparing rsync binary..."
-chmod 755 /tmp/rsync;
-
-echo "Wuhoo! Development Environment Ready!"
-wait $WPID;
+echo "Wuhoo, started runtime..."
+wait -n $CPID $SPID

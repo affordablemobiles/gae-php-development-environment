@@ -1,5 +1,0 @@
-remoteEndpoint: "wss://ssh-relay.example.com:8943/api/client_ws"
-healthcheckListenPort: 7786
-serverKey: "< key here >"
-allowedClientKeys:
-  - "ssh-rsa <allowed-pubkey> user@example"

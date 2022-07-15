@@ -1,0 +1,26 @@
+steps:
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "/bin/bash"
+    args: ["./cloudbuild/get_container_image.sh"]
+    id: IdentifyVersion
+  - name: "gcr.io/k8s-skaffold/pack"
+    entrypoint: "/bin/sh"
+    args: ["./cloudbuild/build_container_image.sh"]
+    env:
+    - 'PROJECT_ID=$PROJECT_ID'
+    - 'COMMIT_SHA=$COMMIT_SHA'
+    id: Buildpack
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - "build"
+      - "."
+      - "-t"
+      - "eu.gcr.io/$PROJECT_ID/gcr-dev:$COMMIT_SHA"
+      - "--build-arg"
+      - "IMAGE=eu.gcr.io/$PROJECT_ID/gcr-dev-intermediate"
+      - "--build-arg"
+      - "TAG=$COMMIT_SHA"
+    dir: intermediate
+    id: BuildIntermediate
+images:
+  - 'eu.gcr.io/$PROJECT_ID/gcr-dev:$COMMIT_SHA'
